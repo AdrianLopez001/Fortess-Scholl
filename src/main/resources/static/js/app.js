@@ -955,62 +955,12 @@ function escHtml(str) {
 
 // ─── Dados de Demonstração Offline (Vercel / Fallback) ────────
 function getFallbackTrilhas() {
-    return [
-        {
-            id: 1, titulo: "Java Júnior (Fundamentos)", descricao: "Aprenda do zero a sintaxe do Java, POO, Coleções e Exceções.", nivel: "JUNIOR", totalModulos: 10, modulosConcluidos: 0,
-            modulos: [
-                { id: 1, ordem: 1, titulo: "Sintaxe Básica, Tipos Primitivos e Operadores", descricao: "Entenda como o Java funciona e declare suas primeiras variáveis.", statusProgresso: "NAO_INICIADO", bloqueado: false },
-                { id: 2, ordem: 2, titulo: "Estruturas de Controle", descricao: "if/else, switch, for, while e do-while.", statusProgresso: "NAO_INICIADO", bloqueado: false }
-            ]
-        },
-        {
-            id: 2, titulo: "Java Pleno (Intermediário)", descricao: "Generics, Concorrência, Streams, Testes Unitários e Java 21.", nivel: "PLENO", totalModulos: 4, modulosConcluidos: 0,
-            modulos: [
-                { id: 11, ordem: 1, titulo: "Generics e Records no Java Moderno", descricao: "Crie classes imutáveis com Records e reduza boilerplate.", statusProgresso: "NAO_INICIADO", bloqueado: false }
-            ]
-        },
-        {
-            id: 3, titulo: "Spring Boot — API REST Profissional", descricao: "Controller, Service, Repository, JPA, Security, Swagger e Docker.", nivel: "PLENO", totalModulos: 10, modulosConcluidos: 0,
-            modulos: [
-                { id: 15, ordem: 1, titulo: "Arquitetura em Camadas de uma API REST", descricao: "Construa endpoints REST profissionais no Spring Boot.", statusProgresso: "NAO_INICIADO", bloqueado: false }
-            ]
-        },
-        {
-            id: 6, titulo: "Entendendo Algoritmos — Aditya Bhargava", descricao: "Busca binária, Selection Sort, QuickSort, Hash, Grafos BFS e Programação Dinâmica.", nivel: "PLENO", totalModulos: 7, modulosConcluidos: 0,
-            modulos: [
-                { id: 35, ordem: 1, titulo: "Pesquisa Binária e Notação Big O", descricao: "Busca binária O(log n) e notação de desempenho.", statusProgresso: "NAO_INICIADO", bloqueado: false }
-            ]
-        },
-        {
-            id: 7, titulo: "Java Como Programar — Deitel 10ª Ed.", descricao: "Polimorfismo, Interfaces, Generics, Concurrent Threads e JDBC.", nivel: "PLENO", totalModulos: 7, modulosConcluidos: 0,
-            modulos: [
-                { id: 42, ordem: 1, titulo: "Herança, Polimorfismo e @Override", descricao: "Hierarquia de classes e binding dinâmico.", statusProgresso: "NAO_INICIADO", bloqueado: false }
-            ]
-        },
-        {
-            id: 8, titulo: "NetWatch — Automação & Monitoramento de Redes com Python", descricao: "Projeto Evolutivo NetWatch: Sockets TCP/IP, SSH CLI Automation, Scapy, RESTCONF, Alertas.", nivel: "PLENO", totalModulos: 6, modulosConcluidos: 0,
-            modulos: [
-                { id: 49, ordem: 1, titulo: "NetWatch Core v1.0 — IP, Gateway e DNS", descricao: "Sockets em Python para identificação de IP, Gateway e DNS.", statusProgresso: "NAO_INICIADO", bloqueado: false },
-                { id: 50, ordem: 2, titulo: "NetWatch Ping Engine — Testes de Conectividade", descricao: "Motor de verificações TCP/IP e latência.", statusProgresso: "NAO_INICIADO", bloqueado: false }
-            ]
-        }
-    ];
+    return window.STATIC_TRILHAS || [];
 }
 
 function getFallbackModulo(moduloId) {
-    if (moduloId === 49) {
-        return {
-            id: 49, ordem: 1, titulo: "NetWatch Core v1.0 — IP, Gateway e DNS",
-            conteudoMarkdown: "# NetWatch Core v1.0 — Informações de Rede\n\n**Projeto Evolutivo:** NetWatch\n\nAprenda a usar a biblioteca `socket` em Python para identificar o IP da máquina, testar resolução DNS e montar o núcleo do NetWatch.",
-            exercicios: [
-                {
-                    id: 64, ordem: 1, titulo: "NetWatch Module 1 — Coletor de IP e DNS",
-                    enunciado: "Implemente `netwatch_info_rede(target)` em Python usando `socket.gethostbyname` para retornar um dict com: `host`, `ip` e `online` (bool).",
-                    codigoTemplate: "import socket\n\ndef netwatch_info_rede(target: str) -> dict:\n    # Use socket.gethostbyname\n    return {\"host\": target, \"ip\": \"127.0.0.1\", \"online\": True}\n",
-                    nivelDificuldade: "EASY", pontosBase: 100
-                }
-            ]
-        };
+    if (window.STATIC_MODULOS && (window.STATIC_MODULOS[moduloId] || window.STATIC_MODULOS[String(moduloId)])) {
+        return window.STATIC_MODULOS[moduloId] || window.STATIC_MODULOS[String(moduloId)];
     }
     return {
         id: moduloId, ordem: 1, titulo: "Módulo Interativo de Estudo",
