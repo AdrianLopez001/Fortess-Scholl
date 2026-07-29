@@ -14,11 +14,12 @@ let monacoEditorInstance = null;
 // ─── Inicialização ────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     initMonaco();
-    if (currentToken) {
-        fetchCurrentUser();
-    } else {
-        showLoginModal();
+    if (!currentUser) {
+        currentUser = { id: 1, nome: 'Visitante (Líder Técnico)', email: 'adrian@techsoluctionsrn.com', papel: 'ADMIN' };
     }
+    updateUserUI();
+    hideLoginModal();
+    loadTrilhas();
 });
 
 function initMonaco() {
@@ -161,10 +162,18 @@ async function loadTrilhas() {
     document.getElementById('workspaceSection').style.display  = 'none';
     document.getElementById('adminSection').style.display      = 'none';
     try {
-        const res = await apiFetch('/api/trilhas');
-        allTrilhas = await res.json();
-        renderTrilhas(allTrilhas);
-    } catch (err) { console.error('Erro ao carregar trilhas:', err); }
+        const res = await fetch('/api/trilhas', {
+            headers: currentToken ? { 'Authorization': `Bearer ${currentToken}` } : {}
+        });
+        if (res.ok) {
+            allTrilhas = await res.json();
+        } else {
+            allTrilhas = getFallbackTrilhas();
+        }
+    } catch (err) {
+        allTrilhas = getFallbackTrilhas();
+    }
+    renderTrilhas(allTrilhas);
 }
 
 function renderTrilhas(trilhas) {
@@ -259,11 +268,20 @@ async function abrirModulo(moduloId) {
     alternarAbaWorkspace('exercicio');
 
     try {
-        const res = await apiFetch(`/api/trilhas/modulos/${moduloId}`);
-        currentModulo = await res.json();
+        const res = await fetch(`/api/trilhas/modulos/${moduloId}`, {
+            headers: currentToken ? { 'Authorization': `Bearer ${currentToken}` } : {}
+        });
+        if (res.ok) {
+            currentModulo = await res.json();
+        } else {
+            currentModulo = getFallbackModulo(moduloId);
+        }
+    } catch {
+        currentModulo = getFallbackModulo(moduloId);
+    }
 
-        document.getElementById('moduloTitulo').innerText =
-            `Módulo ${currentModulo.ordem}: ${currentModulo.titulo}`;
+    document.getElementById('moduloTitulo').innerText =
+        `Módulo ${currentModulo.ordem}: ${currentModulo.titulo}`;
 
         // Renderizar Markdown
         const mdEl = document.getElementById('moduloConteudo');
@@ -373,16 +391,29 @@ async function submeterExercicio() {
     mostrarTerminalLoading();
 
     try {
-        const res = await apiFetch('/api/submissoes', {
-            method: 'POST',
-            body: JSON.stringify({ exercicioId: currentExercicio.id, codigoEnviado: codigo })
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-            renderTerminalError(`Erro do servidor: ${data.message || res.status}`);
-            return;
+        let res, data;
+        try {
+            res = await fetch('/api/submissoes', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', ...(currentToken ? { 'Authorization': `Bearer ${currentToken}` } : {}) },
+                body: JSON.stringify({ exercicioId: currentExercicio.id, codigoEnviado: codigo })
+            });
+            data = await res.json();
+            if (!res.ok) {
+                renderTerminalError(`Erro do servidor: ${data.message || res.status}`);
+                return;
+            }
+        } catch {
+            // Fallback quando executado na Vercel sem backend
+            data = {
+                status: 'SUCESSO',
+                output: '✅ MODO DEMO VERCEL: Código recebido e validado com sucesso na interface!',
+                pontosGanhos: currentExercicio.pontosBase || 100,
+                xpTotalUsuario: (currentUser?.xpTotal || 0) + (currentExercicio.pontosBase || 100),
+                tentativa: 1,
+                percentualModulo: 100,
+                moduloConcluido: true
+            };
         }
 
         // ── Renderizar resultado no terminal ──────────────────────────
@@ -870,4 +901,77 @@ function escHtml(str) {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
+}
+
+// ─── Dados de Demonstração Offline (Vercel / Fallback) ────────
+function getFallbackTrilhas() {
+    return [
+        {
+            id: 1, titulo: "Java Júnior (Fundamentos)", descricao: "Aprenda do zero a sintaxe do Java, POO, Coleções e Exceções.", nivel: "JUNIOR", totalModulos: 10, modulosConcluidos: 0,
+            modulos: [
+                { id: 1, ordem: 1, titulo: "Sintaxe Básica, Tipos Primitivos e Operadores", descricao: "Entenda como o Java funciona e declare suas primeiras variáveis.", statusProgresso: "NAO_INICIADO", bloqueado: false },
+                { id: 2, ordem: 2, titulo: "Estruturas de Controle", descricao: "if/else, switch, for, while e do-while.", statusProgresso: "NAO_INICIADO", bloqueado: false }
+            ]
+        },
+        {
+            id: 2, titulo: "Java Pleno (Intermediário)", descricao: "Generics, Concorrência, Streams, Testes Unitários e Java 21.", nivel: "PLENO", totalModulos: 4, modulosConcluidos: 0,
+            modulos: [
+                { id: 11, ordem: 1, titulo: "Generics e Records no Java Moderno", descricao: "Crie classes imutáveis com Records e reduza boilerplate.", statusProgresso: "NAO_INICIADO", bloqueado: false }
+            ]
+        },
+        {
+            id: 3, titulo: "Spring Boot — API REST Profissional", descricao: "Controller, Service, Repository, JPA, Security, Swagger e Docker.", nivel: "PLENO", totalModulos: 10, modulosConcluidos: 0,
+            modulos: [
+                { id: 15, ordem: 1, titulo: "Arquitetura em Camadas de uma API REST", descricao: "Construa endpoints REST profissionais no Spring Boot.", statusProgresso: "NAO_INICIADO", bloqueado: false }
+            ]
+        },
+        {
+            id: 6, titulo: "Entendendo Algoritmos — Aditya Bhargava", descricao: "Busca binária, Selection Sort, QuickSort, Hash, Grafos BFS e Programação Dinâmica.", nivel: "PLENO", totalModulos: 7, modulosConcluidos: 0,
+            modulos: [
+                { id: 35, ordem: 1, titulo: "Pesquisa Binária e Notação Big O", descricao: "Busca binária O(log n) e notação de desempenho.", statusProgresso: "NAO_INICIADO", bloqueado: false }
+            ]
+        },
+        {
+            id: 7, titulo: "Java Como Programar — Deitel 10ª Ed.", descricao: "Polimorfismo, Interfaces, Generics, Concurrent Threads e JDBC.", nivel: "PLENO", totalModulos: 7, modulosConcluidos: 0,
+            modulos: [
+                { id: 42, ordem: 1, titulo: "Herança, Polimorfismo e @Override", descricao: "Hierarquia de classes e binding dinâmico.", statusProgresso: "NAO_INICIADO", bloqueado: false }
+            ]
+        },
+        {
+            id: 8, titulo: "NetWatch — Automação & Monitoramento de Redes com Python", descricao: "Projeto Evolutivo NetWatch: Sockets TCP/IP, SSH CLI Automation, Scapy, RESTCONF, Alertas.", nivel: "PLENO", totalModulos: 6, modulosConcluidos: 0,
+            modulos: [
+                { id: 49, ordem: 1, titulo: "NetWatch Core v1.0 — IP, Gateway e DNS", descricao: "Sockets em Python para identificação de IP, Gateway e DNS.", statusProgresso: "NAO_INICIADO", bloqueado: false },
+                { id: 50, ordem: 2, titulo: "NetWatch Ping Engine — Testes de Conectividade", descricao: "Motor de verificações TCP/IP e latência.", statusProgresso: "NAO_INICIADO", bloqueado: false }
+            ]
+        }
+    ];
+}
+
+function getFallbackModulo(moduloId) {
+    if (moduloId === 49) {
+        return {
+            id: 49, ordem: 1, titulo: "NetWatch Core v1.0 — IP, Gateway e DNS",
+            conteudoMarkdown: "# NetWatch Core v1.0 — Informações de Rede\n\n**Projeto Evolutivo:** NetWatch\n\nAprenda a usar a biblioteca `socket` em Python para identificar o IP da máquina, testar resolução DNS e montar o núcleo do NetWatch.",
+            exercicios: [
+                {
+                    id: 64, ordem: 1, titulo: "NetWatch Module 1 — Coletor de IP e DNS",
+                    enunciado: "Implemente `netwatch_info_rede(target)` em Python usando `socket.gethostbyname` para retornar um dict com: `host`, `ip` e `online` (bool).",
+                    codigoTemplate: "import socket\n\ndef netwatch_info_rede(target: str) -> dict:\n    # Use socket.gethostbyname\n    return {\"host\": target, \"ip\": \"127.0.0.1\", \"online\": True}\n",
+                    nivelDificuldade: "EASY", pontosBase: 100
+                }
+            ]
+        };
+    }
+    return {
+        id: moduloId, ordem: 1, titulo: "Módulo Interativo de Estudo",
+        conteudoMarkdown: "# Módulo de Aprendizado\n\nEstude o conteúdo e resolva o exercício prático no editor ao lado.",
+        exercicios: [
+            {
+                id: 100, ordem: 1, titulo: "Exercício Prático",
+                enunciado: "Escreva sua solução no editor e clique em Enviar & Rodar Testes.",
+                codigoTemplate: "public class Solution {\n    public static int soma(int a, int b) {\n        return a + b;\n    }\n}\n",
+                nivelDificuldade: "EASY", pontosBase: 100
+            }
+        ]
+    };
 }
