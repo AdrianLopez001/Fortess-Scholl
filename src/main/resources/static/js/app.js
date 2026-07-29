@@ -293,30 +293,31 @@ async function abrirModulo(moduloId) {
     document.getElementById('workspaceSection').style.display = 'block';
     alternarAbaWorkspace('exercicio');
 
-    const isStatic = window.location.hostname.includes('vercel.app') || 
-                     window.location.hostname.includes('github.io') || 
-                     window.location.protocol === 'file:';
+    try {
+        const isStatic = window.location.hostname.includes('vercel.app') || 
+                         window.location.hostname.includes('github.io') || 
+                         window.location.protocol === 'file:';
 
-    if (!isStatic) {
-        try {
-            const res = await fetch(`/api/trilhas/modulos/${moduloId}`, {
-                headers: currentToken ? { 'Authorization': `Bearer ${currentToken}` } : {}
-            });
-            const contentType = res.headers.get('content-type');
-            if (res.ok && contentType && contentType.includes('application/json')) {
-                currentModulo = await res.json();
-            } else {
+        if (!isStatic) {
+            try {
+                const res = await fetch(`/api/trilhas/modulos/${moduloId}`, {
+                    headers: currentToken ? { 'Authorization': `Bearer ${currentToken}` } : {}
+                });
+                const contentType = res.headers.get('content-type');
+                if (res.ok && contentType && contentType.includes('application/json')) {
+                    currentModulo = await res.json();
+                } else {
+                    currentModulo = getFallbackModulo(moduloId);
+                }
+            } catch {
                 currentModulo = getFallbackModulo(moduloId);
             }
-        } catch {
+        } else {
             currentModulo = getFallbackModulo(moduloId);
         }
-    } else {
-        currentModulo = getFallbackModulo(moduloId);
-    }
 
-    document.getElementById('moduloTitulo').innerText =
-        `Módulo ${currentModulo.ordem}: ${currentModulo.titulo}`;
+        document.getElementById('moduloTitulo').innerText =
+            `Módulo ${currentModulo.ordem}: ${currentModulo.titulo}`;
 
         // Renderizar Markdown
         const mdEl = document.getElementById('moduloConteudo');
