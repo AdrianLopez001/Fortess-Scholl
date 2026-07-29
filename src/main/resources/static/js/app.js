@@ -170,15 +170,28 @@ async function loadTrilhas() {
     document.getElementById('trilhasSection').style.display    = 'block';
     document.getElementById('workspaceSection').style.display  = 'none';
     document.getElementById('adminSection').style.display      = 'none';
+
     if (!currentUser) {
         currentUser = { id: 1, nome: 'Visitante (Líder Técnico)', email: 'adrian@techsoluctionsrn.com', papel: 'ADMIN' };
         updateUserUI();
     }
+
+    const isStatic = window.location.hostname.includes('vercel.app') || 
+                     window.location.hostname.includes('github.io') || 
+                     window.location.protocol === 'file:';
+
+    if (isStatic) {
+        allTrilhas = getFallbackTrilhas();
+        renderTrilhas(allTrilhas);
+        return;
+    }
+
     try {
         const res = await fetch('/api/trilhas', {
             headers: currentToken ? { 'Authorization': `Bearer ${currentToken}` } : {}
         });
-        if (res.ok) {
+        const contentType = res.headers.get('content-type');
+        if (res.ok && contentType && contentType.includes('application/json')) {
             allTrilhas = await res.json();
         } else {
             allTrilhas = getFallbackTrilhas();
@@ -280,16 +293,25 @@ async function abrirModulo(moduloId) {
     document.getElementById('workspaceSection').style.display = 'block';
     alternarAbaWorkspace('exercicio');
 
-    try {
-        const res = await fetch(`/api/trilhas/modulos/${moduloId}`, {
-            headers: currentToken ? { 'Authorization': `Bearer ${currentToken}` } : {}
-        });
-        if (res.ok) {
-            currentModulo = await res.json();
-        } else {
+    const isStatic = window.location.hostname.includes('vercel.app') || 
+                     window.location.hostname.includes('github.io') || 
+                     window.location.protocol === 'file:';
+
+    if (!isStatic) {
+        try {
+            const res = await fetch(`/api/trilhas/modulos/${moduloId}`, {
+                headers: currentToken ? { 'Authorization': `Bearer ${currentToken}` } : {}
+            });
+            const contentType = res.headers.get('content-type');
+            if (res.ok && contentType && contentType.includes('application/json')) {
+                currentModulo = await res.json();
+            } else {
+                currentModulo = getFallbackModulo(moduloId);
+            }
+        } catch {
             currentModulo = getFallbackModulo(moduloId);
         }
-    } catch {
+    } else {
         currentModulo = getFallbackModulo(moduloId);
     }
 
