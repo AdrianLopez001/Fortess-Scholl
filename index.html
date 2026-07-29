@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechSoluctionsRN — Plataforma de Ensino Java</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Marked.js para Renderização de Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- Monaco Editor Loader -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <header class="navbar">
+        <div class="brand">
+            <span>⚡ TechSoluctionsRN</span>
+            <span class="brand-badge">JAVA ACADEMY</span>
+        </div>
+
+        <div id="navUserArea" class="nav-user" style="display: none;">
+            <div class="user-info">
+                <span id="userName" class="user-name">Carregando...</span>
+                <span id="userRole" class="user-role">ALUNO</span>
+            </div>
+            <button id="btnAdminView" class="btn btn-outline" style="display: none;" onclick="showAdminDashboard()">
+                📊 Painel do Líder Técnico
+            </button>
+            <button class="btn btn-secondary" onclick="logout()">Sair</button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-content">
+
+        <!-- Dashboard das Trilhas -->
+        <section id="trilhasSection">
+            <div class="section-title">
+                <h2>🚀 Trilhas de Aprendizado</h2>
+                <div style="width: 300px;">
+                    <input type="text" id="filterInput" class="form-control" placeholder="🔍 Filtrar módulos..." oninput="filtrarModulos()">
+                </div>
+            </div>
+
+            <div id="trilhasGrid" class="grid-trilhas">
+                <!-- Injetado dinamicamente via JavaScript -->
+            </div>
+        </section>
+
+        <!-- Workspace de Estudo & Exercício (Split View) -->
+        <section id="workspaceSection" style="display: none;">
+            <div style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                <button class="btn btn-secondary" onclick="voltarParaTrilhas()">← Voltar para as Trilhas</button>
+
+                <!-- Navigation Tabs: Exercício Prático x Quiz Teórico -->
+                <div style="display: flex; gap: 8px;">
+                    <button id="tabExercicioBtn" class="btn btn-primary" onclick="alternarAbaWorkspace('exercicio')">💻 Exercício Prático</button>
+                    <button id="tabQuizBtn" class="btn btn-secondary" onclick="alternarAbaWorkspace('quiz')">❓ Quiz Teórico</button>
+                </div>
+            </div>
+
+            <!-- Visão Exercício Prático -->
+            <div id="workspaceExercicio" class="workspace">
+                <!-- Painel Esquerdo: Teoria & Conteúdo Markdown -->
+                <div class="panel-content glass">
+                    <h2 id="moduloTitulo">Título do Módulo</h2>
+                    <hr style="border-color: var(--border-color); margin: 1rem 0;">
+                    <div id="moduloConteudo" class="markdown-body">
+                        Carregando conteúdo...
+                    </div>
+
+                    <div style="margin-top: 2rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3>📝 Exercício Prático</h3>
+                            <div id="exerciseListSelector" style="display: flex; gap: 6px;"></div>
+                        </div>
+                        <div id="exercicioEnunciado" style="margin-top: 0.5rem; color: var(--text-secondary);">
+                            Selecione um exercício para resolver.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Painel Direito: Monaco Code Editor, Terminal & Histórico -->
+                <div class="panel-editor glass">
+                    <div class="editor-header">
+                        <span id="codeFileName" style="font-weight: 600; color: #818cf8; font-family: var(--font-code);">Solution.java</span>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn btn-secondary" onclick="resetarCodigo()">Restaurar Código</button>
+                            <button id="btnSubmeter" class="btn btn-primary" onclick="submeterExercicio()">
+                                ▶ Enviar & Rodar Testes (Ctrl+Enter)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Container Monaco Editor -->
+                    <div id="monacoEditorContainer" style="flex: 1; width: 100%; min-height: 380px;"></div>
+
+                    <div class="terminal-output">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                            <span style="font-weight: 600; color: var(--text-muted);">TERMINAL DE EXECUÇÃO JUNIT</span>
+                            <span id="historyToggleBtn" style="font-size: 0.75rem; color: var(--primary); cursor: pointer;" onclick="toggleHistorico()">📜 Ver Histórico de Submissões</span>
+                        </div>
+                        <div id="terminalLog">Clique em "Enviar & Rodar Testes" para validar sua solução.</div>
+
+                        <!-- Drawer de Histórico -->
+                        <div id="historicoContainer" style="display: none; margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 10px;">
+                            <h4 style="font-size: 0.85rem; margin-bottom: 8px; color: var(--text-secondary);">Histórico Recente de Tentativas:</h4>
+                            <div id="historicoList" style="display: flex; flex-direction: column; gap: 6px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visão Quiz Teórico -->
+            <div id="workspaceQuiz" class="glass" style="display: none; padding: 2rem; border-radius: var(--radius-lg); max-width: 900px; margin: 0 auto;">
+                <h2 style="margin-bottom: 1rem;">❓ Quiz Teórico do Módulo</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem;">Responda às questões de múltipla escolha para validar a retenção de conceitos teóricos.</p>
+
+                <div id="quizContainer">
+                    <!-- Injetado via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Admin Dashboard Section -->
+        <section id="adminSection" style="display: none;">
+            <div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                <h2>📊 Acompanhamento & Gestão do Time</h2>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-primary" onclick="abrirModalNovoUsuario()">+ Novo Colaborador</button>
+                    <button class="btn btn-secondary" onclick="voltarParaTrilhas()">← Voltar para Trilhas</button>
+                </div>
+            </div>
+
+            <div class="glass" style="padding: 2rem; border-radius: var(--radius-lg); margin-bottom: 2rem;">
+                <h3 style="margin-bottom: 1rem;">Progresso da Equipe</h3>
+                <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-secondary);">
+                            <th style="padding: 12px;">COLABORADOR</th>
+                            <th style="padding: 12px;">PAPEL</th>
+                            <th style="padding: 12px;">MÓDULOS CONCLUÍDOS</th>
+                            <th style="padding: 12px;">EXERCÍCIOS RESOLVIDOS</th>
+                            <th style="padding: 12px; width: 250px;">PROGRESSO (%)</th>
+                            <th style="padding: 12px; text-align: right;">AÇÕES</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminTableBody">
+                        <!-- Injetado via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal de Certificado de Conclusão Oficial -->
+    <div id="certModal" class="modal-overlay" style="display: none;">
+        <div class="modal-card glass" style="max-width: 700px; text-align: center; border: 2px solid var(--primary); padding: 3rem; background: #0c101a;">
+            <div style="font-size: 3.5rem; margin-bottom: 0.5rem;">🎓</div>
+            <h2 style="color: var(--secondary); font-size: 1.8rem; letter-spacing: 1px;">CERTIFICADO DE CONCLUSÃO</h2>
+            <p style="color: var(--text-secondary); font-size: 0.95rem; margin: 0.5rem 0 2rem;">TechSoluctionsRN — Programa de Capacitação Técnica Interna</p>
+            
+            <div style="background: rgba(255, 255, 255, 0.03); border: 1px dashed var(--primary); padding: 2rem; border-radius: var(--radius-md); margin-bottom: 2rem; position: relative;">
+                <p style="font-size: 1.1rem; line-height: 1.6;">
+                    Certificamos que o(a) colaborador(a) <br>
+                    <strong id="certUserName" style="color: white; font-size: 1.4rem; display: inline-block; margin: 8px 0;">-</strong><br>
+                    concluiu com aproveitamento total a trilha de capacitação<br>
+                    <strong id="certTrilhaName" style="color: #818cf8; font-size: 1.2rem; display: inline-block; margin-top: 8px;">-</strong>
+                </p>
+                <div style="margin-top: 1.5rem; font-size: 0.8rem; color: var(--text-muted); display: flex; justify-content: space-between;">
+                    <span>Código de Autenticidade: <strong id="certCodigoVal" style="color: var(--secondary); font-family: var(--font-code);">-</strong></span>
+                    <span>Emitido em: <strong id="certDataEmissao" style="color: white;">-</strong></span>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 12px; justify-content: center;">
+                <button class="btn btn-primary" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>
+                <button class="btn btn-secondary" onclick="document.getElementById('certModal').style.display='none'">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Novo Colaborador (Admin) -->
+    <div id="newUserModal" class="modal-overlay" style="display: none;">
+        <div class="modal-card glass">
+            <h2 style="margin-bottom: 1rem;">Cadastrar Novo Colaborador</h2>
+            <form onsubmit="handleCadastrarUsuario(event)">
+                <div class="form-group">
+                    <label>Nome Completo</label>
+                    <input type="text" id="newNome" class="form-control" placeholder="ex: Julio Cesar" required>
+                </div>
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input type="email" id="newEmail" class="form-control" placeholder="ex: julio@techsoluctionsrn.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Senha Inicial</label>
+                    <input type="password" id="newSenha" class="form-control" placeholder="••••••••" required>
+                </div>
+                <div class="form-group">
+                    <label>Papel</label>
+                    <select id="newPapel" class="form-control">
+                        <option value="ALUNO">ALUNO (Colaborador)</option>
+                        <option value="ADMIN">ADMIN (Líder Técnico)</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 1.5rem;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Salvar Colaborador</button>
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('newUserModal').style.display='none'">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Login / Seleção Rápida de Usuário -->
+    <div id="loginModal" class="modal-overlay" style="display: none;">
+        <div class="modal-card glass">
+            <h2 style="margin-bottom: 0.5rem; text-align: center;">Acesso à Plataforma</h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; text-align: center; margin-bottom: 1.5rem;">
+                Capacitação Técnica Interna — TechSoluctionsRN
+            </p>
+
+            <!-- Quick Pills -->
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">Acesso Rápido para Testes:</div>
+            <div class="quick-login-pills">
+                <button class="pill-btn" onclick="quickLogin('adrian@techsoluctionsrn.com')">👑 Adrian (Admin)</button>
+                <button class="pill-btn" onclick="quickLogin('julio@techsoluctionsrn.com')">👑 Julio (Admin)</button>
+            </div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="emailInput">E-mail</label>
+                    <input type="email" id="emailInput" class="form-control" placeholder="seu.email@techsoluctionsrn.com" required value="adrian@techsoluctionsrn.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="passwordInput">Senha</label>
+                    <input type="password" id="passwordInput" class="form-control" placeholder="••••••••" required value="admin123">
+                </div>
+
+                <div id="loginError" style="color: var(--danger); font-size: 0.85rem; margin-bottom: 1rem; display: none;"></div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 12px;">
+                    Entrar na Plataforma
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Application JavaScript -->
+    <script src="/js/app.js"></script>
+</body>
+</html>

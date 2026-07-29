@@ -1,12 +1,3 @@
 {
-  "outputDirectory": "src/main/resources/static",
-  "buildCommand": null,
-  "framework": null,
-  "cleanUrls": true,
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/$1"
-    }
-  ]
+  "cleanUrls": true
 }

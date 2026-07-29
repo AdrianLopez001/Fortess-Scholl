@@ -1,0 +1,1118 @@
+/* ============================================================
+   TechSoluctionsRN — Java Academy — Design System Profissional
+   Inspirado em: Codecademy, LeetCode, Exercism, Linear, Vercel
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* ============================================================
+   CSS Variables & Design Tokens
+   ============================================================ */
+:root {
+  /* Brand Colors */
+  --primary: #6366f1;
+  --primary-dim: #4338ca;
+  --primary-glow: rgba(99, 102, 241, 0.25);
+  --secondary: #34d399;
+  --secondary-dim: #10b981;
+  --accent: #f59e0b;
+  --accent-dim: #d97706;
+  --danger: #f87171;
+  --danger-dim: #ef4444;
+
+  /* Difficulty Colors */
+  --easy: #34d399;
+  --medium: #f59e0b;
+  --hard: #f87171;
+
+  /* Backgrounds */
+  --bg-base: #060b14;
+  --bg-surface: #0c1220;
+  --bg-card: #111827;
+  --bg-hover: #1a2235;
+  --bg-glass: rgba(17, 24, 39, 0.8);
+
+  /* Text */
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #475569;
+  --text-code: #a5b4fc;
+
+  /* Borders */
+  --border-color: rgba(99, 102, 241, 0.15);
+  --border-subtle: rgba(255, 255, 255, 0.05);
+
+  /* Spacing */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  /* Typography */
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-code: 'Fira Code', 'Cascadia Code', monospace;
+
+  /* Transitions */
+  --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================================
+   Base Reset & Layout
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  font-size: 15px;
+  overflow-x: hidden;
+}
+
+/* Animated background mesh */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(99,102,241,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(52,211,153,0.05) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============================================================
+   Navbar
+   ============================================================ */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  height: 60px;
+  background: rgba(6, 11, 20, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: -0.3px;
+  color: var(--text-primary);
+}
+
+.brand-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--primary-glow);
+  border: 1px solid rgba(99,102,241,0.4);
+  color: #a5b4fc;
+}
+
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.user-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.user-role {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+/* ============================================================
+   Main Content
+   ============================================================ */
+.main-content {
+  position: relative;
+  z-index: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* ============================================================
+   Glass Card
+   ============================================================ */
+.glass {
+  background: var(--bg-glass);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color);
+}
+
+/* ============================================================
+   Buttons
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+.btn-primary:hover {
+  background: var(--primary-dim);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px var(--primary-glow);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-secondary);
+  border-color: var(--border-color);
+}
+.btn-secondary:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  border-color: rgba(99,102,241,0.4);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--text-secondary);
+  border-color: var(--border-color);
+}
+.btn-outline:hover { background: var(--bg-hover); }
+
+.btn-success {
+  background: linear-gradient(135deg, #059669, #10b981);
+  color: white;
+}
+.btn-success:hover { opacity: 0.9; }
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* ============================================================
+   Form Controls
+   ============================================================ */
+.form-group { margin-bottom: 1rem; }
+.form-group label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  transition: var(--transition);
+  outline: none;
+}
+
+.form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+select.form-control {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%2394a3b8'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+  appearance: none;
+}
+
+/* ============================================================
+   Dashboard de Aluno (Home)
+   ============================================================ */
+.dashboard-header {
+  margin-bottom: 2rem;
+}
+
+.dashboard-widgets {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.widget-card {
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: var(--transition);
+}
+
+.widget-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.widget-icon { font-size: 1.5rem; margin-bottom: 4px; }
+.widget-value {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1;
+}
+.widget-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   Ranking Table
+   ============================================================ */
+.ranking-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  transition: var(--transition);
+}
+
+.ranking-item:hover { background: var(--bg-hover); }
+.ranking-item.is-voce {
+  background: rgba(99,102,241,0.1);
+  border: 1px solid rgba(99,102,241,0.3);
+}
+
+.ranking-pos {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  min-width: 28px;
+}
+.ranking-pos.gold { color: #f59e0b; font-size: 1.1rem; }
+.ranking-pos.silver { color: #94a3b8; }
+.ranking-pos.bronze { color: #cd7c2a; }
+
+/* ============================================================
+   Trilhas Grid
+   ============================================================ */
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+.section-title h2 { font-size: 1.3rem; font-weight: 700; }
+
+.grid-trilhas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 1.5rem;
+}
+
+.trilha-card {
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: var(--transition-slow);
+  position: relative;
+  overflow: hidden;
+}
+
+.trilha-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  opacity: 0;
+  transition: var(--transition);
+}
+.trilha-card:hover::before { opacity: 1; }
+.trilha-card:hover { transform: translateY(-3px); box-shadow: 0 16px 48px rgba(0,0,0,0.4); }
+
+.trilha-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+.trilha-header h3 { font-size: 1rem; font-weight: 700; }
+
+.nivel-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+.nivel-junior { background: rgba(52,211,153,0.15); color: #34d399; border: 1px solid rgba(52,211,153,0.3); }
+.nivel-pleno { background: rgba(99,102,241,0.15); color: #818cf8; border: 1px solid rgba(99,102,241,0.3); }
+
+/* ============================================================
+   Progress Bar
+   ============================================================ */
+.progress-bar-bg {
+  width: 100%;
+  height: 5px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 999px;
+  margin-top: 6px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  border-radius: 999px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 2px;
+}
+
+/* ============================================================
+   Módulo List Items
+   ============================================================ */
+.modulos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 280px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) transparent;
+}
+
+.modulo-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  border: 1px solid transparent;
+  gap: 10px;
+}
+
+.modulo-item:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-color);
+}
+
+.modulo-status {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.status-CONCLUIDO { background: rgba(52,211,153,0.15); color: #34d399; }
+.status-EM_ANDAMENTO { background: rgba(245,158,11,0.15); color: #f59e0b; }
+.status-NAO_INICIADO { background: rgba(255,255,255,0.05); color: var(--text-muted); }
+
+.difficulty-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+.difficulty-EASY { color: var(--easy); }
+.difficulty-MEDIUM { color: var(--medium); }
+.difficulty-HARD { color: var(--hard); }
+
+/* ============================================================
+   Workspace Layout (Split View)
+   ============================================================ */
+.workspace {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  height: calc(100vh - 100px);
+  min-height: 600px;
+}
+
+.panel-content {
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) transparent;
+}
+
+.panel-editor {
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+  background: rgba(0,0,0,0.2);
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   Terminal Output
+   ============================================================ */
+.terminal-output {
+  font-family: var(--font-code);
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  padding: 1rem;
+  min-height: 120px;
+  max-height: 250px;
+  overflow-y: auto;
+  background: rgba(0,0,0,0.3);
+  border-top: 1px solid var(--border-color);
+  white-space: pre-wrap;
+  flex-shrink: 0;
+}
+
+.terminal-success {
+  color: #34d399;
+  text-shadow: 0 0 8px rgba(52,211,153,0.3);
+}
+
+.terminal-error { color: #f87171; }
+.terminal-info { color: #60a5fa; }
+
+/* ============================================================
+   XP Toast Notification
+   ============================================================ */
+.xp-toast {
+  position: fixed;
+  top: 80px;
+  right: 24px;
+  padding: 12px 20px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, #059669, #34d399);
+  color: white;
+  font-weight: 700;
+  font-size: 0.95rem;
+  z-index: 1000;
+  box-shadow: 0 8px 32px rgba(52,211,153,0.4);
+  transform: translateX(120%);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.xp-toast.show { transform: translateX(0); }
+
+/* ============================================================
+   Dica Pedagógica (Hint Panel)
+   ============================================================ */
+.hint-panel {
+  background: rgba(245,158,11,0.08);
+  border: 1px solid rgba(245,158,11,0.25);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: #fcd34d;
+  animation: fadeInSlide 0.3s ease;
+}
+
+.hint-panel::before { content: '💡 Dica Pedagógica: '; font-weight: 700; }
+
+/* ============================================================
+   Completion Modal / Progress Report
+   ============================================================ */
+.completion-report {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  max-width: 560px;
+  width: 90%;
+}
+
+.score-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  font-weight: 800;
+}
+
+/* ============================================================
+   Markdown Body Styles
+   ============================================================ */
+.markdown-body h1 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  background: linear-gradient(90deg, var(--text-primary), var(--text-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.markdown-body h2 { font-size: 1.1rem; font-weight: 700; margin: 1.5rem 0 0.75rem; color: #a5b4fc; }
+.markdown-body h3 { font-size: 0.95rem; font-weight: 600; margin: 1rem 0 0.5rem; color: #94a3b8; }
+.markdown-body p { margin-bottom: 0.75rem; color: var(--text-secondary); line-height: 1.7; }
+.markdown-body ul, .markdown-body ol { padding-left: 1.5rem; margin-bottom: 0.75rem; color: var(--text-secondary); }
+.markdown-body li { margin-bottom: 4px; }
+
+.markdown-body pre {
+  background: #0a0e1a;
+  border: 1px solid rgba(99,102,241,0.2);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 0.75rem 0;
+}
+
+.markdown-body code {
+  font-family: var(--font-code);
+  font-size: 0.82rem;
+  color: var(--text-code);
+}
+
+.markdown-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.85rem;
+}
+.markdown-body th {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  text-align: left;
+  font-weight: 600;
+}
+.markdown-body td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+}
+.markdown-body tr:hover td { background: var(--bg-hover); }
+
+blockquote {
+  border-left: 3px solid var(--primary);
+  padding-left: 1rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin: 0.75rem 0;
+}
+
+/* ============================================================
+   Exercise Progress Tracker
+   ============================================================ */
+.exercise-tracker {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.exercise-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  opacity: 0.4;
+  transition: var(--transition);
+}
+.exercise-dot.done { background: var(--secondary); opacity: 1; box-shadow: 0 0 8px rgba(52,211,153,0.4); }
+.exercise-dot.active { background: var(--primary); opacity: 1; }
+
+/* ============================================================
+   Module Completion Banner (70% rule)
+   ============================================================ */
+.completion-gate {
+  background: rgba(99,102,241,0.08);
+  border: 1px solid rgba(99,102,241,0.25);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin: 10px 0;
+  font-size: 0.85rem;
+}
+
+/* ============================================================
+   Quick Login Pills
+   ============================================================ */
+.quick-login-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.pill-btn {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(99,102,241,0.1);
+  border: 1px solid rgba(99,102,241,0.25);
+  color: #a5b4fc;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: var(--font-body);
+}
+.pill-btn:hover { background: rgba(99,102,241,0.2); border-color: var(--primary); }
+
+/* ============================================================
+   Modal Overlay
+   ============================================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 1rem;
+}
+
+.modal-card {
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  width: 100%;
+  max-width: 460px;
+  animation: modalIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ============================================================
+   Animations
+   ============================================================ */
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.92) translateY(16px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes fadeInSlide {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--primary-glow); }
+  50% { box-shadow: 0 0 0 8px transparent; }
+}
+
+@keyframes xpFloat {
+  0% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-60px) scale(1.2); }
+}
+
+.xp-float {
+  position: fixed;
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: #34d399;
+  text-shadow: 0 0 16px rgba(52,211,153,0.6);
+  pointer-events: none;
+  animation: xpFloat 1.5s ease-out forwards;
+  z-index: 1000;
+}
+
+/* ============================================================
+   Tab System
+   ============================================================ */
+.tab-group {
+  display: flex;
+  gap: 4px;
+  background: rgba(0,0,0,0.2);
+  padding: 4px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+
+.tab-btn {
+  padding: 7px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  background: transparent;
+  color: var(--text-muted);
+  border: none;
+  font-family: var(--font-body);
+}
+.tab-btn.active {
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 2px 8px var(--primary-glow);
+}
+
+/* ============================================================
+   Print Styles for Certificate
+   ============================================================ */
+@media print {
+  body > *:not(#certModal) { display: none !important; }
+  #certModal {
+    position: static !important;
+    background: white !important;
+    color: black !important;
+  }
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 900px) {
+  .workspace { grid-template-columns: 1fr; height: auto; }
+  .grid-trilhas { grid-template-columns: 1fr; }
+  .dashboard-widgets { grid-template-columns: repeat(2, 1fr); }
+  .main-content { padding: 1rem; }
+}
+
+/* ============================================================
+   Terminal — Sistema de Feedback Pedagógico Rico
+   ============================================================ */
+
+/* Loading state */
+.terminal-loading {
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* Seção interna do terminal */
+.terminal-section {
+  margin-bottom: 12px;
+}
+.terminal-section:last-child { margin-bottom: 0; }
+
+.terminal-hr {
+  border: none;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  margin: 10px 0;
+}
+
+.terminal-label {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+/* Cabeçalho de sucesso */
+.terminal-success-header {
+  color: var(--secondary);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+/* Cabeçalho de erro */
+.terminal-error-header {
+  color: var(--danger);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+/* Pre formatado dentro do terminal */
+.terminal-pre {
+  font-family: var(--font-code);
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  line-height: 1.6;
+}
+.terminal-pre-success {
+  background: rgba(52, 211, 153, 0.05);
+  border-left: 3px solid var(--secondary);
+  color: #86efac;
+}
+.terminal-pre-error {
+  background: rgba(248, 113, 113, 0.05);
+  border-left: 3px solid var(--danger);
+  color: #fca5a5;
+}
+
+/* Stats row */
+.terminal-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 4px;
+}
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: rgba(0,0,0,0.25);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  min-width: 110px;
+}
+.stat-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.stat-value {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font-code);
+}
+.stat-xp {
+  color: var(--accent) !important;
+  font-size: 1.05rem !important;
+}
+
+/* Notificação de módulo concluído */
+.terminal-module-complete {
+  background: linear-gradient(135deg, rgba(52,211,153,0.1), rgba(99,102,241,0.1));
+  border: 1px solid rgba(52,211,153,0.3);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  color: var(--secondary);
+  font-weight: 600;
+}
+
+/* Bloco de teste falhado */
+.test-fail-block {
+  background: rgba(248, 113, 113, 0.05);
+  border: 1px solid rgba(248,113,113,0.2);
+  border-left: 3px solid var(--danger);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  margin-bottom: 8px;
+}
+.test-fail-header {
+  font-weight: 700;
+  color: var(--danger);
+  font-size: 0.88rem;
+  margin-bottom: 6px;
+  font-family: var(--font-code);
+}
+.test-fail-detail {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  margin-bottom: 4px;
+  font-family: var(--font-code);
+}
+.test-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  min-width: 72px;
+}
+.expected-label { color: #34d399; }
+.actual-label   { color: #f87171; }
+.test-value {
+  background: rgba(0,0,0,0.3);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.82rem;
+}
+.expected-value { color: #86efac; border: 1px solid rgba(52,211,153,0.2); }
+.actual-value   { color: #fca5a5; border: 1px solid rgba(248,113,113,0.2); }
+.test-fail-location {
+  font-size: 0.73rem;
+  color: var(--text-muted);
+  font-family: var(--font-code);
+  margin-top: 6px;
+}
+
+/* Painel de dica pedagógica */
+.terminal-hint {
+  background: rgba(99,102,241,0.07);
+  border: 1px solid rgba(99,102,241,0.25);
+  border-left: 3px solid var(--primary);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+}
+.hint-text {
+  color: #c7d2fe;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  margin: 4px 0 0;
+}
+
+/* Dot piscante */
+.terminal-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+  margin-right: 8px;
+  vertical-align: middle;
+}
+.blink {
+  animation: blinkDot 1s ease-in-out infinite;
+}
+@keyframes blinkDot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+/* ============================================================
+   XP Toast Animado
+   ============================================================ */
+.xp-toast {
+  position: fixed;
+  right: 28px;
+  bottom: 28px;
+  background: linear-gradient(135deg, #1a2235, #111827);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: 1.1rem;
+  font-weight: 800;
+  padding: 12px 22px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 24px rgba(245,158,11,0.25);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  transform: translateY(80px);
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+  pointer-events: none;
+}
+.xp-toast-show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* ============================================================
+   Spinner para botão de submissão
+   ============================================================ */
+.spinner {
+  display: inline-block;
+  width: 12px; height: 12px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* kbd */
+kbd {
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 0.72rem;
+  font-family: var(--font-code);
+  color: var(--text-muted);
+  margin-left: 4px;
+}
+
+/* ============================================================
+   Quiz Card Styles
+   ============================================================ */
+.quiz-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  transition: border-color 0.2s;
+}
+.quiz-card:hover { border-color: var(--border-color); }
+
+.quiz-options { display: flex; flex-direction: column; gap: 8px; }
+
+.quiz-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  background: rgba(0,0,0,0.2);
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-size: 0.9rem;
+}
+.quiz-option:hover { background: var(--bg-hover); border-color: var(--border-color); }
+.quiz-option input[type="radio"] { accent-color: var(--primary); width: 16px; height: 16px; }
+
+.quiz-feedback {
+  margin: 10px 0;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  min-height: 24px;
+  transition: all 0.2s;
+}
+.quiz-correct   { background: rgba(52,211,153,0.1); color: var(--secondary); border: 1px solid rgba(52,211,153,0.2); }
+.quiz-incorrect { background: rgba(248,113,113,0.1); color: var(--danger);   border: 1px solid rgba(248,113,113,0.2); }
