@@ -270,6 +270,20 @@ function filtrarModulos() {
 }
 
 async function emitirCertificadoOficial(trilhaId) {
+    const isStatic = window.location.hostname.includes('vercel.app') || 
+                     window.location.hostname.includes('github.io') || 
+                     window.location.protocol === 'file:';
+
+    if (isStatic) {
+        const trilha = allTrilhas.find(t => t.id === trilhaId) || { titulo: 'Java Academy' };
+        document.getElementById('certUserName').innerText  = currentUser?.nome || 'Visitante (Líder Técnico)';
+        document.getElementById('certTrilhaName').innerText = trilha.titulo;
+        document.getElementById('certCodigoVal').innerText  = 'VERCEL-DEMO-' + Math.random().toString(36).substring(2, 9).toUpperCase();
+        document.getElementById('certDataEmissao').innerText = new Date().toLocaleDateString('pt-BR');
+        document.getElementById('certModal').style.display = 'flex';
+        return;
+    }
+
     try {
         const res = await apiFetch(`/api/certificados/trilha/${trilhaId}`);
         if (!res.ok) {
