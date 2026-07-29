@@ -170,6 +170,10 @@ async function loadTrilhas() {
     document.getElementById('trilhasSection').style.display    = 'block';
     document.getElementById('workspaceSection').style.display  = 'none';
     document.getElementById('adminSection').style.display      = 'none';
+    if (!currentUser) {
+        currentUser = { id: 1, nome: 'Visitante (Líder Técnico)', email: 'adrian@techsoluctionsrn.com', papel: 'ADMIN' };
+        updateUserUI();
+    }
     try {
         const res = await fetch('/api/trilhas', {
             headers: currentToken ? { 'Authorization': `Bearer ${currentToken}` } : {}
@@ -215,7 +219,7 @@ function renderTrilhas(trilhas) {
                 </div>`;
         });
 
-        const podeEmitir = pct === 100 || currentUser.papel === 'ADMIN';
+        const podeEmitir = pct === 100 || (currentUser && currentUser.papel === 'ADMIN');
         const card = document.createElement('div');
         card.className = 'trilha-card glass';
         card.innerHTML = `
