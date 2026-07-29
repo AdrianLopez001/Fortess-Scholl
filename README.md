@@ -104,17 +104,6 @@ Em vez de videoaulas passivas, o aprendizado é **100% mão na massa**: em cada 
 
 ---
 
-## 🔑 Credenciais Rápidas de Acesso (Ambiente de Demonstração)
-
-A plataforma conta com atalhos de **Acesso Rápido** na tela inicial de login:
-
-| Papel | Nome | E-mail | Senha |
-|---|---|---|---|
-| 👑 **Líder Técnico (Admin)** | Adrian Lopes | `adrian@techsoluctionsrn.com` | `admin123` |
-| 👑 **Líder Técnico (Admin)** | Julio Cesar | `julio@techsoluctionsrn.com` | `admin123` |
-
----
-
 ## 📁 Estrutura do Projeto
 
 ```
