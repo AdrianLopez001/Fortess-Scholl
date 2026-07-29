@@ -98,8 +98,8 @@ async function fetchCurrentUser() {
  */
 function quickLogin(email) {
     document.getElementById('emailInput').value = email;
-    // Adrian é o único admin, todos os outros são alunos
-    const isAdmin = email.startsWith('adrian');
+    // Adrian e Julio são admins
+    const isAdmin = email.startsWith('adrian') || email.startsWith('julio');
     document.getElementById('passwordInput').value = isAdmin ? 'admin123' : 'aluno123';
 }
 

@@ -1,8 +1,7 @@
 -- Insert Usuarios (Senhas criptografadas com BCrypt: admin123 e aluno123)
 INSERT INTO usuarios (nome, email, senha, papel) VALUES 
 ('Adrian Gonçalves Lopes', 'adrian@techsoluctionsrn.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.AQubh4a', 'ADMIN'),
-('Julio Cesar', 'julio@techsoluctionsrn.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.AQubh4a', 'ALUNO'),
-('Claudia', 'claudia@techsoluctionsrn.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.AQubh4a', 'ALUNO');
+('Julio Cesar', 'julio@techsoluctionsrn.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.AQubh4a', 'ADMIN');
 
 -- Insert Trilhas
 INSERT INTO trilhas (id, titulo, descricao, nivel, ordem) VALUES 

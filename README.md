@@ -111,8 +111,7 @@ A plataforma conta com atalhos de **Acesso Rápido** na tela inicial de login:
 | Papel | Nome | E-mail | Senha |
 |---|---|---|---|
 | 👑 **Líder Técnico (Admin)** | Adrian Lopes | `adrian@techsoluctionsrn.com` | `admin123` |
-| 💻 **Colaborador (Aluno)** | Julio Cesar | `julio@techsoluctionsrn.com` | `aluno123` |
-| 💻 **Colaborador (Aluno)** | Claudia | `claudia@techsoluctionsrn.com` | `aluno123` |
+| 👑 **Líder Técnico (Admin)** | Julio Cesar | `julio@techsoluctionsrn.com` | `admin123` |
 
 ---
 
